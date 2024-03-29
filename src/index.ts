@@ -1,7 +1,8 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
+import UserRoute from "./routes/UserRoute";
 
 const PORT = "7000";
 
@@ -12,9 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/api", async (req: Request, res: Response) => {
-  res.json({ message: "hello world" });
-});
+app.use("/api/user", UserRoute);
 
 app.listen(PORT, () => {
   console.log(`Server start at localhost:${PORT}`);
