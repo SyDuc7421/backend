@@ -15,8 +15,31 @@ const createCurrentUser = async (req: Request, res: Response) => {
     res.status(201).json(newUser.toObject());
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error failed creating user" });
+    res.status(500).json({ message: "Error failed to create user" });
   }
 };
 
-export default { createCurrentUser };
+const updateCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const { name, address, city, country } = req.body;
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.name = name;
+    user.adddress = address;
+    user.city = city;
+    user.country = country;
+    await user.save();
+
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error failed to update user" });
+  }
+};
+export default { createCurrentUser, updateCurrentUser };
