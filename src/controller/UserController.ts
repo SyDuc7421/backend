@@ -31,7 +31,7 @@ const updateCurrentUser = async (req: Request, res: Response) => {
     }
 
     user.name = name;
-    user.adddress = address;
+    user.address = address;
     user.city = city;
     user.country = country;
     await user.save();
@@ -42,4 +42,17 @@ const updateCurrentUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error failed to update user" });
   }
 };
-export default { createCurrentUser, updateCurrentUser };
+
+const getCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const currentUser = await User.findOne({ _id: req.userId });
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(currentUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+export default { createCurrentUser, updateCurrentUser, getCurrentUser };
