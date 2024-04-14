@@ -4,6 +4,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import UserRoute from "./routes/UserRoute";
 import { v2 as cloudinary } from "cloudinary";
+import RestaurantRouter from "./routes/RestaurantRoute";
 
 const PORT = "7000";
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/user", UserRoute);
+app.use("/api/restaurant", RestaurantRouter);
 
 app.listen(PORT, () => {
   console.log(`Server start at localhost:${PORT}`);
