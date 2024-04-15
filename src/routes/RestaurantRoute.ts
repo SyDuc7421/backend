@@ -23,4 +23,5 @@ router.post(
   RestaurantController.createRestaurant
 );
 
+router.get("/", jwtCheck, jwtParse, RestaurantController.getRestaurant);
 export default router;
