@@ -7,7 +7,7 @@ const getRestaurant = async (req: Request, res: Response) => {
   try {
     const restaurant = await Restaurant.findOne({ user: req.userId });
     if (!restaurant) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Restaurant not found",
       });
     }
@@ -24,7 +24,7 @@ const createRestaurant = async (req: Request, res: Response) => {
   try {
     const existingRestaurant = await Restaurant.findOne({ user: req.userId });
     if (existingRestaurant) {
-      res.status(409).json({
+      return res.status(409).json({
         message: "User restaurant already exists",
       });
     }
@@ -52,4 +52,52 @@ const createRestaurant = async (req: Request, res: Response) => {
   }
 };
 
-export default { createRestaurant, getRestaurant };
+const updateRestaurant = async (req: Request, res: Response) => {
+  try {
+    const restaurant = await Restaurant.findOne({ user: req.userId });
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+    const {
+      restaurantName,
+      city,
+      country,
+      deliveryPrice,
+      estimatedDeliveryTime,
+      cuisines,
+      menuItems,
+    } = req.body;
+
+    restaurant.restaurantName = restaurantName;
+    restaurant.city = city;
+    restaurant.country = country;
+    restaurant.deliveryPrice = deliveryPrice;
+    restaurant.estimatedDeliveryTime = estimatedDeliveryTime;
+    restaurant.cuisines = cuisines;
+    restaurant.menuItems = menuItems;
+    restaurant.lastUpdated = new Date();
+
+    if (req.file) {
+      // image store
+      const image = req.file as Express.Multer.File;
+
+      const base64Image = Buffer.from(image.buffer).toString("base64");
+      const dataURI = `data:${image.mimetype};base64,${base64Image}`;
+
+      const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
+
+      // change current image
+      restaurant.imageUrl = uploadResponse.url;
+    }
+
+    await restaurant.save();
+    return res.status(200).json(restaurant);
+  } catch (error) {
+    console.log(error);
+    res.send(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+export default { createRestaurant, getRestaurant, updateRestaurant };

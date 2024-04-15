@@ -24,4 +24,14 @@ router.post(
 );
 
 router.get("/", jwtCheck, jwtParse, RestaurantController.getRestaurant);
+
+router.put(
+  "/",
+  jwtCheck,
+  jwtParse,
+  upload.single("imageFile"),
+  validateRestaurantRequest,
+  RestaurantController.updateRestaurant
+);
+
 export default router;
