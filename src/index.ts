@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import UserRoute from "./routes/UserRoute";
 import { v2 as cloudinary } from "cloudinary";
 import RestaurantRouter from "./routes/RestaurantRoute";
+import RestaurantsRoute from "./routes/RestaurantsRoute";
 
 const PORT = "7000";
 
@@ -22,6 +23,7 @@ app.use(cors());
 
 app.use("/api/user", UserRoute);
 app.use("/api/restaurant", RestaurantRouter);
+app.use("/api/restaurants", RestaurantsRoute);
 
 app.listen(PORT, () => {
   console.log(`Server start at localhost:${PORT}`);
