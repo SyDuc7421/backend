@@ -15,7 +15,7 @@ const seachRestaurants = async (req: Request, res: Response) => {
     const cityCheck = await Restaurant.countDocuments(query);
 
     if (cityCheck === 0) {
-      res.status(404).json({
+      return res.status(404).json({
         data: [],
         pagination: {
           total: 0,
@@ -67,10 +67,10 @@ const seachRestaurants = async (req: Request, res: Response) => {
         pages: Math.ceil(total / pageSize),
       },
     };
-    res.status(200).json(response);
+    return res.status(200).json(response);
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Something went wrong",
     });
   }
