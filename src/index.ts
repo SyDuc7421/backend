@@ -6,6 +6,7 @@ import UserRoute from "./routes/UserRoute";
 import { v2 as cloudinary } from "cloudinary";
 import RestaurantRouter from "./routes/RestaurantRoute";
 import RestaurantsRoute from "./routes/RestaurantsRoute";
+import OrderRouter from "./routes/OrderRoute";
 
 const PORT = "7000";
 
@@ -18,12 +19,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
+app.use(express.json());
 
 app.use("/api/user", UserRoute);
 app.use("/api/restaurant", RestaurantRouter);
 app.use("/api/restaurants", RestaurantsRoute);
+app.use("/api/order", OrderRouter);
 
 app.listen(PORT, () => {
   console.log(`Server start at localhost:${PORT}`);
