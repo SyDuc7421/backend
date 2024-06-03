@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
@@ -22,6 +22,19 @@ const app = express();
 app.use(cors());
 app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
 app.use(express.json());
+
+app.get("/api/health", (req: Request, res: Response) => {
+  try {
+    res.status(200).json({
+      health: "Health OK",
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.send(500).json({
+      message: "Something went wrong",
+    });
+  }
+});
 
 app.use("/api/user", UserRoute);
 app.use("/api/restaurant", RestaurantRouter);
