@@ -25,6 +25,13 @@ router.post(
 
 router.get("/", jwtCheck, jwtParse, RestaurantController.getRestaurant);
 
+router.get(
+  "/order",
+  jwtCheck,
+  jwtParse,
+  RestaurantController.getRestaurantOrder
+);
+
 router.put(
   "/",
   jwtCheck,

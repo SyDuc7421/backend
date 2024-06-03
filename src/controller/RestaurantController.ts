@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Restaurant from "../models/restaurant";
 import cloudinary from "cloudinary";
 import mongoose from "mongoose";
+import Order from "../models/order";
 
 const getRestaurant = async (req: Request, res: Response) => {
   try {
@@ -100,4 +101,40 @@ const updateRestaurant = async (req: Request, res: Response) => {
   }
 };
 
-export default { createRestaurant, getRestaurant, updateRestaurant };
+const getRestaurantOrder = async (req: Request, res: Response) => {
+  try {
+    const restaurant = await Restaurant.findOne({
+      user: req.userId,
+    });
+
+    if (!restaurant) {
+      return res.status(404).json({
+        message: "Restaurant not found",
+      });
+    }
+    const orders = await Order.find({
+      restaurant: restaurant._id,
+    })
+      .populate("user")
+      .populate("restaurant");
+    if (!orders) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    res.send(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+export default {
+  createRestaurant,
+  getRestaurant,
+  updateRestaurant,
+  getRestaurantOrder,
+};
