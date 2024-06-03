@@ -25,6 +25,13 @@ router.post(
 
 router.get("/", jwtCheck, jwtParse, RestaurantController.getRestaurant);
 
+router.patch(
+  "/order/:orderId/status",
+  jwtCheck,
+  jwtParse,
+  RestaurantController.updateRestautantOrderStatus
+);
+
 router.get(
   "/order",
   jwtCheck,

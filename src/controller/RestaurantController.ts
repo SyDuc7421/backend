@@ -132,9 +132,41 @@ const getRestaurantOrder = async (req: Request, res: Response) => {
   }
 };
 
+const updateRestautantOrderStatus = async (req: Request, res: Response) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  const order = await Order.findById(orderId);
+
+  if (!order) {
+    return res.status(404).json({
+      message: "Order not found",
+    });
+  }
+
+  const restaurant = await Restaurant.findById(order.restaurant);
+  if (!restaurant) {
+    return res.status(404).json({
+      message: "Restaurant not found",
+    });
+  }
+
+  if (restaurant.user?.toString() !== req.userId) {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+
+  order.status = status;
+
+  await order.save();
+
+  res.status(200).json(order);
+};
 export default {
   createRestaurant,
   getRestaurant,
   updateRestaurant,
   getRestaurantOrder,
+  updateRestautantOrderStatus,
 };
